@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>智慧实验室 - 登录</title>
+    <style>
+        body { min-height: 100vh; display: flex; align-items: center; justify-content: center; background-color: #f8f9fa; }
+        .login-container { max-width: 500px; width: 100%; padding: 30px; border-radius: 10px; box-shadow: 0 0 20px rgba(0,0,0,0.1); background: white; }
+        .login-header { text-align: center; margin-bottom: 30px; padding: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 10px 10px 0 0; }
+        .role-buttons { display: flex; justify-content: center; gap: 10px; margin-bottom: 30px; }
+        .role-buttons button { padding: 10px 20px; border: 1px solid #667eea; background: white; color: #667eea; border-radius: 5px; cursor: pointer; transition: all 0.3s; }
+        .role-buttons button.active { background: #667eea; color: white; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: 500; }
+        .form-group input { width: 100%; padding: 10px; border: 1px solid #ced4da; border-radius: 5px; }
+        .login-button { width: 100%; padding: 12px; background: #667eea; color: white; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; }
+        .error-message { background: #f8d7da; color: #721c24; padding: 10px; border-radius: 5px; margin-bottom: 20px; text-align: center; }
+        .register-link { text-align: center; margin-top: 15px; }
+        .register-link a { color: #667eea; text-decoration: none; }
+    </style>
+</head>
+<body>
+<div class="login-container">
+    <div class="login-header">
+        <h2>智慧实验室</h2>
+        <p>请选择角色并登录</p>
+    </div>
+
+    <div th:if="${error}" class="error-message" th:text="${error}"></div>
+
+    <div class="role-buttons">
+        <button id="userLoginBtn" class="active" onclick="showUserLogin()">普通用户登录</button>
+        <button id="teacherLoginBtn" onclick="showTeacherLogin()">管理员登录</button>
+    </div>
+
+    <div id="userLoginForm">
+        <form th:action="@{/user/login}" method="post">
+            <div class="form-group"><label>学号</label><input type="text" name="userId" placeholder="请输入学号"></div>
+            <div class="form-group"><label>密码</label><input type="password" name="password" placeholder="请输入密码"></div>
+            <button type="submit" class="login-button">登录</button>
+        </form>
+        <div class="register-link">还没有账号？<a th:href="@{/register/user}">立即注册</a></div>
+    </div>
+
+    <div id="teacherLoginForm" style="display: none;">
+        <form th:action="@{/admin/login}" method="post">
+            <div class="form-group"><label>管理员ID</label><input type="text" name="teacherId" placeholder="请输入管理员ID"></div>
+            <div class="form-group"><label>密码</label><input type="password" name="password" placeholder="请输入密码"></div>
+            <button type="submit" class="login-button">登录</button>
+        </form>
+        <div class="register-link">还没有账号？<a th:href="@{/register/admin}">立即注册</a></div>
+    </div>
+</div>
+
+<script>
+    function showUserLogin() {
+        document.getElementById('userLoginForm').style.display = 'block';
+        document.getElementById('teacherLoginForm').style.display = 'none';
+        document.getElementById('userLoginBtn').classList.add('active');
+        document.getElementById('teacherLoginBtn').classList.remove('active');
+    }
+    function showTeacherLogin() {
+        document.getElementById('userLoginForm').style.display = 'none';
+        document.getElementById('teacherLoginForm').style.display = 'block';
+        document.getElementById('userLoginBtn').classList.remove('active');
+        document.getElementById('teacherLoginBtn').classList.add('active');
+    }
+</script>
+</body>
+</html>

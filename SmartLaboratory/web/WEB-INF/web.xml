@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
+         version="4.0">
+
+    <!-- Thymeleaf 配置参数 -->
+    <context-param>
+        <param-name>view-prefix</param-name>
+        <param-value>/WEB-INF/templates/</param-value>
+    </context-param>
+    <context-param>
+        <param-name>view-suffix</param-name>
+        <param-value>.html</param-value>
+    </context-param>
+
+    <!-- 字符编码过滤器 -->
+    <filter>
+        <filter-name>CharacterEncodingFilter</filter-name>
+        <filter-class>com.controller.CharacterEncodingFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>CharacterEncodingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <!-- 首页 -->
+    <servlet>
+        <servlet-name>IndexServlet</servlet-name>
+        <servlet-class>com.controller.IndexServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>IndexServlet</servlet-name>
+        <url-pattern>/</url-pattern>
+        <url-pattern>/login</url-pattern>
+    </servlet-mapping>
+
+    <!-- 用户注册页面 -->
+    <servlet>
+        <servlet-name>UserRegisterPageServlet</servlet-name>
+        <servlet-class>com.controller.UserRegistServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UserRegisterPageServlet</servlet-name>
+        <url-pattern>/register/user</url-pattern>
+    </servlet-mapping>
+
+    <!-- 用户注册处理 -->
+    <servlet>
+        <servlet-name>UserRegisServlet</servlet-name>
+        <servlet-class>com.controller.UserRegistServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UserRegisServlet</servlet-name>
+        <url-pattern>/user/register</url-pattern>
+    </servlet-mapping>
+
+    <!-- 用户登录 -->
+    <servlet>
+        <servlet-name>UserLoginServlet</servlet-name>
+        <servlet-class>com.controller.UserLoginServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UserLoginServlet</servlet-name>
+        <url-pattern>/user/login</url-pattern>
+    </servlet-mapping>
+
+    <!-- 管理员注册页面 -->
+    <servlet>
+        <servlet-name>AdminRegisterPageServlet</servlet-name>
+        <servlet-class>com.controller.AdminRegisterServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AdminRegisterPageServlet</servlet-name>
+        <url-pattern>/register/admin</url-pattern>
+    </servlet-mapping>
+
+    <!-- 管理员注册 -->
+    <servlet>
+        <servlet-name>AdminRegisterServlet</servlet-name>
+        <servlet-class>com.controller.AdminRegisterServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AdminRegisterServlet</servlet-name>
+        <url-pattern>/admin/register</url-pattern>
+    </servlet-mapping>
+
+    <!-- 管理员登录 -->
+    <servlet>
+        <servlet-name>AdminLoginServlet</servlet-name>
+        <servlet-class>com.controller.AdminLoginServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AdminLoginServlet</servlet-name>
+        <url-pattern>/admin/login</url-pattern>
+    </servlet-mapping>
+    <!-- 用户签到 -->
+    <servlet>
+        <servlet-name>SignInServlet</servlet-name>
+        <servlet-class>com.controller.SignInServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>SignInServlet</servlet-name>
+        <url-pattern>/user/signin</url-pattern>
+    </servlet-mapping>
+    <!-- 用户首页 -->
+    <servlet>
+        <servlet-name>UserIndexServlet</servlet-name>
+        <servlet-class>com.controller.UserIndexServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UserIndexServlet</servlet-name>
+        <url-pattern>/user/index</url-pattern>
+    </servlet-mapping>
+    <!-- 管理员首页 -->
+    <servlet>
+        <servlet-name>AdminIndexServlet</servlet-name>
+        <servlet-class>com.controller.AdminIndexServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AdminIndexServlet</servlet-name>
+        <url-pattern>/admin/index</url-pattern>
+    </servlet-mapping>
+</web-app>
