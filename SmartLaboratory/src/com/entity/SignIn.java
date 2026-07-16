@@ -5,9 +5,12 @@ import java.util.Date;
 public class SignIn {
     private int id;              // 签到记录ID
     private String studentId;    // 学生学号
-    private String name;           // 学生姓名
+    private String name;         // 学生姓名
     private Date signInTime;     // 签到时间
+    private Date signOutTime;    // 签退时间
     private String status;       // 签到状态（正常/迟到/早退等）
+    private Double latitude;     // 签到纬度
+    private Double longitude;    // 签到经度
 
     public SignIn() {
     }
@@ -16,6 +19,14 @@ public class SignIn {
         this.name = name;
         this.signInTime = signInTime;
         this.status = status;
+    }
+
+    public Date getSignOutTime() {
+        return signOutTime;
+    }
+
+    public void setSignOutTime(Date signOutTime) {
+        this.signOutTime = signOutTime;
     }
 
     public String getName() {
@@ -55,5 +66,21 @@ public class SignIn {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
     }
 }

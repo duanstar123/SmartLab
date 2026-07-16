@@ -27,4 +27,12 @@ public interface SignInDao {
      * @return 签到记录
      */
     public SignIn findByDate(String studentId, Date date);
+
+    /**
+     * 签退（更新签退时间）
+     * @param studentId 学生学号
+     * @param signOutTime 签退时间
+     * @return 影响的行数
+     */
+    public int signOut(String studentId, Date signOutTime);
 }
