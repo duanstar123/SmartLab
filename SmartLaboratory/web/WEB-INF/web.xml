@@ -121,4 +121,13 @@
         <servlet-name>AdminIndexServlet</servlet-name>
         <url-pattern>/admin/index</url-pattern>
     </servlet-mapping>
+    <!-- 管理员用户管理 -->
+    <servlet>
+        <servlet-name>AdminUserServlet</servlet-name>
+        <servlet-class>com.controller.AdminUserServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AdminUserServlet</servlet-name>
+        <url-pattern>/admin/users</url-pattern>
+    </servlet-mapping>
 </web-app>
