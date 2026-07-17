@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>智慧实验室 - 用户注册</title>
+    <style>
+        body { min-height: 100vh; display: flex; align-items: center; justify-content: center; background-color: #f8f9fa; }
+        .register-container { max-width: 600px; width: 100%; padding: 30px; border-radius: 10px; box-shadow: 0 0 20px rgba(0,0,0,0.1); background: white; }
+        .register-header { text-align: center; margin-bottom: 30px; padding: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 10px 10px 0 0; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: 500; }
+        .form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid #ced4da; border-radius: 5px; }
+        .form-row { display: flex; gap: 15px; }
+        .form-row .form-group { flex: 1; }
+        .register-button { width: 100%; padding: 12px; background: #667eea; color: white; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; margin-top: 20px; }
+        .login-link { text-align: center; margin-top: 15px; }
+        .login-link a { color: #667eea; text-decoration: none; }
+        .error-message { background: #f8d7da; color: #721c24; padding: 10px; border-radius: 5px; margin-bottom: 20px; text-align: center; }
+    </style>
+</head>
+<body>
+<div class="register-container">
+    <div class="register-header">
+        <h2>智慧实验室</h2>
+        <p>用户注册</p>
+    </div>
+
+    <div th:if="${error}" class="error-message" th:text="${error}"></div>
+
+    <form th:action="@{/user/register}" method="post">
+        <div class="form-row">
+            <div class="form-group"><label>学号 *</label><input type="text" name="studentId" required placeholder="请输入学号"></div>
+            <div class="form-group"><label>姓名 *</label><input type="text" name="name" required placeholder="请输入姓名"></div>
+        </div>
+        <div class="form-row">
+            <div class="form-group"><label>性别 *</label>
+                <select name="gender" required>
+                    <option value="">请选择性别</option>
+                    <option value="男">男</option>
+                    <option value="女">女</option>
+                </select>
+            </div>
+            <div class="form-group"><label>年级 *</label><input type="text" name="grade" required placeholder="如：2021级"></div>
+        </div>
+        <div class="form-group"><label>学院名称 *</label><input type="text" name="collegeName" required placeholder="请输入学院名称"></div>
+        <div class="form-row">
+            <div class="form-group"><label>系别名称 *</label><input type="text" name="departmentName" required placeholder="请输入系别名称"></div>
+            <div class="form-group"><label>班级名称 *</label><input type="text" name="className" required placeholder="请输入班级名称"></div>
+        </div>
+        <div class="form-group"><label>密码 *</label><input type="password" name="password" required placeholder="请输入密码"></div>
+        <div class="form-group"><label>确认密码 *</label><input type="password" name="confirmPassword" required placeholder="请再次输入密码"></div>
+        <button type="submit" class="register-button">注册</button>
+    </form>
+
+    <div class="login-link">已有账号？<a th:href="@{/login}">立即登录</a></div>
+</div>
+
+<script>
+    document.querySelector('form').addEventListener('submit', function(e) {
+        var pwd = document.querySelector('input[name="password"]').value;
+        var cpwd = document.querySelector('input[name="confirmPassword"]').value;
+        if (pwd !== cpwd) { e.preventDefault(); alert('两次密码不一致'); }
+        if (pwd.length < 6) { e.preventDefault(); alert('密码至少6位'); }
+    });
+</script>
+</body>
+</html>

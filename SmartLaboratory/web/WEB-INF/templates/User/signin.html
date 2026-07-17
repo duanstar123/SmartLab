@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>签到 - 智慧实验室</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%);
+            min-height: 100vh;
+            display: flex;
+        }
+        /* 左侧导航栏 */
+        .sidebar {
+            width: 200px;
+            background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            flex-shrink: 0;
+        }
+        .sidebar .logo {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+        .sidebar a {
+            display: block;
+            padding: 12px 15px;
+            color: rgba(255,255,255,0.9);
+            text-decoration: none;
+            border-radius: 8px;
+            margin-bottom: 5px;
+            transition: all 0.3s;
+        }
+        .sidebar a:hover, .sidebar a.active {
+            background: rgba(255,255,255,0.2);
+            color: white;
+        }
+        /* 右侧主内容 */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 30px;
+        }
+        /* 消息提示 */
+        .message-bar {
+            padding: 12px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .message-bar.success {
+            background: #dcfce7;
+            color: #166534;
+        }
+        .message-bar.error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        /* 签到卡片 */
+        .signin-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 6px 24px rgba(0,0,0,0.08);
+            padding: 0;
+            max-width: 750px;
+            width: 85%;
+            margin: 0 auto;
+            overflow: hidden;
+            position: relative;
+        }
+        /* 选项卡 */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #eee;
+        }
+        .tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: 500;
+            color: #666;
+            transition: all 0.3s;
+            position: relative;
+        }
+        .tab.active {
+            color: #667eea;
+        }
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 3px;
+            background: #667eea;
+            border-radius: 2px;
+        }
+        /* 当前状态 */
+        .status-section {
+            text-align: center;
+            padding: 40px 30px;
+        }
+        .status-title {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+        .status-value {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+        .status-normal {
+            color: #2563eb;
+        }
+        .signin-time {
+            font-size: 15px;
+            color: #94a3b8;
+            margin-top: 8px;
+        }
+        /* 位置信息 */
+        .location-section {
+            margin: 0 30px;
+            background: linear-gradient(135deg, #dcfce7 0%, #f8fafc 100%);
+            border-radius: 16px;
+            padding: 26px;
+            border-left: none;
+            box-shadow: 0 2px 12px rgba(34,197,94,0.12);
+        }
+        .location-title {
+            font-weight: 600;
+            color: #166534;
+            margin-bottom: 16px;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .location-info {
+            font-size: 15px;
+            color: #15803d;
+            line-height: 2;
+        }
+        .btn {
+            padding: 14px 40px;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            color: white;
+        }
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(37, 99, 235, 0.4);
+        }
+        .btn-secondary {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+        }
+        .btn-secondary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(245, 158, 11, 0.4);
+        }
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .btn-small {
+            padding: 9px 20px;
+            font-size: 14px;
+        }
+        /* 操作按钮 */
+        .action-section {
+            padding: 30px;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+        /* 签到规则 */
+        .rules-section {
+            margin: 0 30px 30px;
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 20px;
+        }
+        .rules-title {
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+        .rules-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .rules-list li {
+            font-size: 13px;
+            color: #64748b;
+            padding: 6px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+        .rules-list li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: #94a3b8;
+        }
+    </style>
+</head>
+<body>
+<!-- 左侧导航栏 -->
+<div class="sidebar">
+    <div class="logo">🧪 实验室管理系统</div>
+    <a href="/user/index">🏠 首页</a>
+    <a href="/user/signin" class="active">📋 签到中心</a>
+    <a href="#">📊 签到记录</a>
+    <a href="#">🎯 活动签到</a>
+    <a href="/user/profile">👤 个人信息</a>
+    <a href="#">💬 个人中心</a>
+    <a href="#">📰 新闻中心</a>
+</div>
+
+<!-- 右侧主内容 -->
+<div class="main-content">
+    <!-- 顶部消息提示 -->
+    <div th:if="${message != null and message != ''}" th:class="${message.contains('成功') ? 'message-bar success' : 'message-bar error'}">
+        <span th:text="${message}"></span>
+    </div>
+
+    <!-- 签到卡片 -->
+    <div class="signin-card">
+        <!-- 选项卡 -->
+        <div class="tabs">
+            <div class="tab active">签到/签退</div>
+            <div class="tab">补签申请</div>
+        </div>
+
+        <!-- 当前状态 -->
+        <div class="status-section">
+            <div class="status-title">当前状态</div>
+            <div class="status-value" th:class="${isSignedIn ? 'status-normal' : 'status-normal'}">
+                <span th:text="${isSignedIn ? '已签到（未签退）' : '未签到'}"></span>
+            </div>
+            <div th:if="${todayRecord != null && todayRecord.getSignInTime() != null}" class="signin-time">
+                签到时间: <span th:text="${#dates.format(todayRecord.signInTime, 'yyyy-MM-dd HH:mm:ss')}"></span>
+            </div>
+            <div th:if="${todayRecord != null && todayRecord.getSignOutTime() != null}" class="signin-time">
+                签退时间: <span th:text="${#dates.format(todayRecord.signOutTime, 'yyyy-MM-dd HH:mm:ss')}"></span>
+            </div>
+        </div>
+
+        <!-- 位置信息 -->
+        <div class="location-section">
+            <div class="location-title">📍 位置信息</div>
+            <div class="location-info">
+                <div>经度: <span id="longitude">--</span></div>
+                <div>纬度: <span id="latitude">--</span></div>
+                <div>距离签到点: <span id="distance">--</span></div>
+            </div>
+            <button type="button" class="btn btn-small" onclick="getLocation()" style="margin-top: 12px;">
+                🔄 重新获取位置
+            </button>
+        </div>
+
+
+        <!-- 操作按钮 -->
+        <div class="action-section">
+            <form th:action="@{/user/signin}" method="post" id="signInForm" style="display: inline;">
+                <input type="hidden" name="latitude" id="signInLatitude"/>
+                <input type="hidden" name="longitude" id="signInLongitude"/>
+                <button type="submit" class="btn btn-primary" th:disabled="${isSignedIn}" onclick="return checkBeforeSignIn()">
+                    <span>✓</span> 签到
+                </button>
+            </form>
+            <form th:action="@{/user/signin}" method="post" style="display: inline;">
+                <input type="hidden" name="action" value="signout"/>
+                <button type="submit" class="btn btn-secondary" th:disabled="${!isSignedIn}">
+                    <span>✕</span> 签退
+                </button>
+            </form>
+        </div>
+
+        <!-- 签到规则 -->
+        <div class="rules-section">
+            <div class="rules-title">📋 签到规则</div>
+            <ul class="rules-list">
+                <li>每天只能签到一次，签退后才能再次签到</li>
+                <li>签到时间会自动记录，不可修改</li>
+                <li>每月补签次数最多3次，需要管理员审核</li>
+                <li>签退时间必须晚于签到时间</li>
+                <li>必须在签到范围内才能进行签到和签退</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<script>
+    var currentLatitude = null;
+    var currentLongitude = null;
+    const ALLOW_DISTANCE = 500;
+    const TARGET_LAT = 37.9047;   // 中北大学工程训练中心纬度
+    const TARGET_LNG = 112.5667;  // 中北大学工程训练中心经度
+
+    function getLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                function(pos) {
+                    currentLatitude = pos.coords.latitude;
+                    currentLongitude = pos.coords.longitude;
+                    document.getElementById('latitude').textContent = pos.coords.latitude.toFixed(6);
+                    document.getElementById('longitude').textContent = pos.coords.longitude.toFixed(6);
+                    var distance = calculateDistance(pos.coords.latitude, pos.coords.longitude, TARGET_LAT, TARGET_LNG);
+                    document.getElementById('distance').textContent = distance.toFixed(2) + '米';
+                    alert('位置获取成功！');
+                },
+                function(error) {
+                    alert('获取位置失败：' + error.message);
+                },
+                { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+            );
+        } else {
+            alert('您的浏览器不支持地理定位');
+        }
+    }
+
+    function calculateDistance(lat1, lng1, lat2, lng2) {
+        var R = 6371000;
+        var dLat = (lat2 - lat1) * Math.PI / 180;
+        var dLng = (lng2 - lng1) * Math.PI / 180;
+        var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+            Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+            Math.sin(dLng/2) * Math.sin(dLng/2);
+        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        return R * c;
+    }
+
+    function checkBeforeSignIn() {
+        if (currentLatitude == null || currentLongitude == null) {
+            alert('请先获取位置信息！');
+            getLocation();
+            return false;
+        }
+        document.getElementById('signInLatitude').value = currentLatitude;
+        document.getElementById('signInLongitude').value = currentLongitude;
+        return true;
+    }
+    // 选项卡切换
+    function switchTab(tabName) {
+        // 切换选项卡样式
+        var tabs = document.querySelectorAll('.tab');
+        tabs.forEach(function(tab) {
+            tab.classList.remove('active');
+        });
+
+        // 显示对应内容
+        if (tabName === 'signin') {
+            document.querySelector('.tab:nth-child(1)').classList.add('active');
+            // 显示签到内容，隐藏补签内容
+            document.getElementById('signin-content').style.display = 'block';
+            document.getElementById('apply-content').style.display = 'none';
+        } else {
+            document.querySelector('.tab:nth-child(2)').classList.add('active');
+            // 显示补签内容，隐藏签到内容
+            document.getElementById('signin-content').style.display = 'none';
+            document.getElementById('apply-content').style.display = 'block';
+        }
+    }
+</script>
+</body>
+</html>

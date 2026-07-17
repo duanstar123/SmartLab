@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>智慧实验室 - 用户首页</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            display: flex;
+            height: 100vh;
+        }
+        /* 左侧导航栏 */
+        .sidebar {
+            width: 200px;
+            background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        .sidebar .logo {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+        .sidebar a {
+            display: block;
+            padding: 12px 15px;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            margin-bottom: 5px;
+            transition: all 0.3s;
+        }
+        .sidebar a:hover,
+        .sidebar a.active {
+            background: rgba(255,255,255,0.2);
+        }
+        /* 右侧主内容区 */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: auto;
+        }
+        /* 顶部标题栏 */
+        .header {
+            background: white;
+            padding: 15px 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 20px;
+            color: #333;
+        }
+        .header .user-info {
+            color: #666;
+        }
+        /* 内容区域 */
+        .content {
+            padding: 30px;
+        }
+        .welcome-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+        .welcome-box h2 {
+            margin: 0 0 10px 0;
+        }
+        .quick-links {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+        .link-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.3s;
+        }
+        .link-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        .link-card div {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+        .link-card h3 {
+            margin: 0;
+            color: #333;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+<!-- 左侧导航栏 -->
+<div class="sidebar">
+    <div class="logo">智慧实验室</div>
+    <a th:href="@{/user/index}" class="active">🏠 首页</a>
+    <a th:href="@{/user/profile}">👤 个人信息</a>
+    <a th:href="@{/user/signin}">📋 签到</a>
+    <a th:href="@{/user/seat}">💺 座位预约</a>
+    <a th:href="@{/user/tasks}">📝 任务管理</a>
+    <a th:href="@{/user/daily}">📊 日常管理</a>
+</div>
+
+<!-- 右侧主内容区 -->
+<div class="main-content">
+    <!-- 顶部标题栏 -->
+    <div class="header">
+        <h1>首页</h1>
+        <div class="user-info">
+            欢迎, <span th:text="${user.name}"></span> (学号: <span th:text="${user.studentId}"></span>)
+        </div>
+    </div>
+
+    <!-- 内容区域 -->
+    <div class="content">
+        <div class="welcome-box">
+            <h2>欢迎来到智慧实验室管理系统！</h2>
+            <p>这里是您的个人工作台，您可以进行签到、预约座位、查看任务等操作。</p>
+        </div>
+
+        <div class="quick-links">
+            <a th:href="@{/user/signin}" class="link-card">
+                <div>📋</div>
+                <h3>今日签到</h3>
+            </a>
+            <a th:href="@{/user/seat}" class="link-card">
+                <div>💺</div>
+                <h3>座位预约</h3>
+            </a>
+            <a th:href="@{/user/tasks}" class="link-card">
+                <div>📝</div>
+                <h3>任务管理</h3>
+            </a>
+            <a th:href="@{/user/profile}" class="link-card">
+                <div>👤</div>
+                <h3>个人信息</h3>
+            </a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

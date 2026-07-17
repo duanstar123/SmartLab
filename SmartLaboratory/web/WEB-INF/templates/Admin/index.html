@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>智慧实验室 - 管理员首页</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        /* 头部导航 */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 16px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header .logo {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 15px;
+            color: #333;
+        }
+
+        .user-info span {
+            font-weight: 500;
+            color: #667eea;
+        }
+
+        /* 导航菜单 */
+        .nav {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 12px 30px;
+            border-bottom: 1px solid rgba(102, 126, 234, 0.1);
+        }
+
+        .nav a {
+            text-decoration: none;
+            color: #555;
+            margin-right: 25px;
+            font-size: 15px;
+            padding: 8px 12px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .nav a:hover,
+        .nav a.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        /* 主内容区域 */
+        .content {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        /* 欢迎卡片 */
+        .welcome-card {
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .welcome-card h2 {
+            font-size: 28px;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .welcome-card p {
+            font-size: 16px;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        /* 功能快捷入口 */
+        .quick-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 24px;
+        }
+
+        .link-card {
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(102, 126, 234, 0.1);
+        }
+
+        .link-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.3);
+            border-color: rgba(102, 126, 234, 0.3);
+        }
+
+        .link-card .icon {
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 20px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .link-card h3 {
+            font-size: 18px;
+            color: #333;
+            margin: 0 0 10px 0;
+            font-weight: 600;
+        }
+
+        .link-card p {
+            font-size: 14px;
+            color: #888;
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        /* 统计卡片 */
+        .stats-section {
+            margin-top: 30px;
+        }
+
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+            text-align: center;
+        }
+
+        .stat-card .number {
+            font-size: 32px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-card .label {
+            font-size: 14px;
+            color: #888;
+            margin-top: 8px;
+        }
+
+        /* 底部信息 */
+        .footer {
+            text-align: center;
+            padding: 30px;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+<!-- 头部导航 -->
+<div class="header">
+    <div class="logo">智慧实验室</div>
+    <div class="user-info">
+        <span>欢迎, <span th:text="${admin.username}"></span></span>
+        <span style="color: #ccc;">|</span>
+        <span>管理员ID: <span th:text="${admin.adminId}"></span></span>
+    </div>
+</div>
+
+<!-- 导航菜单 -->
+<div class="nav">
+    <a th:href="@{/admin/index}" class="active">首页</a>
+    <a th:href="@{/admin/users}">用户管理</a>
+    <a th:href="@{/admin/signin}">签到管理</a>
+    <a th:href="@{/admin/seat}">座位管理</a>
+    <a th:href="@{/admin/tasks}">任务管理</a>
+    <a th:href="@{/admin/profile}">个人信息</a>
+</div>
+
+<!-- 主内容区域 -->
+<div class="content">
+    <!-- 欢迎卡片 -->
+    <div class="welcome-card">
+        <h2>您好，<span th:text="${admin.username}"></span>！</h2>
+        <p>欢迎来到智慧实验室管理系统管理员控制台。您可以管理用户、查看签到记录、管理座位资源等。祝您工作愉快！</p>
+    </div>
+
+    <!-- 功能快捷入口 -->
+    <div class="quick-links">
+        <a th:href="@{/admin/users}" class="link-card">
+            <div class="icon">👥</div>
+            <h3>用户管理</h3>
+            <p>管理系统用户信息</p>
+        </a>
+        <a th:href="@{/admin/signin}" class="link-card">
+            <div class="icon">📋</div>
+            <h3>签到管理</h3>
+            <p>查看和统计签到记录</p>
+        </a>
+        <a th:href="@{/admin/seat}" class="link-card">
+            <div class="icon">💺</div>
+            <h3>座位管理</h3>
+            <p>管理实验室座位资源</p>
+        </a>
+        <a th:href="@{/admin/tasks}" class="link-card">
+            <div class="icon">📝</div>
+            <h3>任务管理</h3>
+            <p>发布和管理实验任务</p>
+        </a>
+    </div>
+
+    <!-- 统计信息 -->
+    <div class="stats-section">
+        <div class="stats-cards">
+            <div class="stat-card">
+                <div class="number">0</div>
+                <div class="label">总用户数</div>
+            </div>
+            <div class="stat-card">
+                <div class="number">0</div>
+                <div class="label">今日签到</div>
+            </div>
+            <div class="stat-card">
+                <div class="number">0</div>
+                <div class="label">已预约座位</div>
+            </div>
+            <div class="stat-card">
+                <div class="number">0</div>
+                <div class="label">待处理任务</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 底部信息 -->
+<div class="footer">
+    <p>© 2024 智慧实验室管理系统 | 版权所有</p>
+</div>
+</body>
+</html>
