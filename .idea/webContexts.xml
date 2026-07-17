@@ -4,6 +4,7 @@
     <option name="state">
       <map>
         <entry key="file://$PROJECT_DIR$/SmartLaboratory/web/WEB-INF/templates/User/index.html" value="file://$PROJECT_DIR$/SmartLaboratory/web/WEB-INF/templates/User" />
+        <entry key="file://$PROJECT_DIR$/SmartLaboratory/web/WEB-INF/templates/User/signin.html" value="file://$PROJECT_DIR$/SmartLaboratory/web/WEB-INF/templates/User" />
       </map>
     </option>
   </component>

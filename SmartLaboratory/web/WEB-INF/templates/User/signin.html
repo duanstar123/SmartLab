@@ -49,60 +49,35 @@
             display: flex;
             flex-direction: column;
             padding: 30px;
-            overflow: auto;
         }
-        /* 顶部消息提示 */
+        /* 消息提示 */
         .message-bar {
-            background: white;
             padding: 12px 20px;
-            border-radius: 25px;
+            border-radius: 8px;
+            margin-bottom: 20px;
             display: flex;
             align-items: center;
-            justify-content: center;
             gap: 10px;
-            margin-bottom: 30px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-            position: relative;
-            max-width: 300px;
-            margin-left: auto;
-            margin-right: auto;
         }
         .message-bar.success {
             background: #dcfce7;
             color: #166534;
         }
-        .message-bar i {
-            font-size: 16px;
+        .message-bar.error {
+            background: #fee2e2;
+            color: #991b1b;
         }
         /* 签到卡片 */
         .signin-card {
             background: white;
-            border-radius: 16px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border-radius: 20px;
+            box-shadow: 0 6px 24px rgba(0,0,0,0.08);
             padding: 0;
-            max-width: 500px;
+            max-width: 750px;
+            width: 85%;
             margin: 0 auto;
             overflow: hidden;
             position: relative;
-        }
-        /* 补签申请按钮 */
-        .apply-btn {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            padding: 8px 20px;
-            background: rgba(255,255,255,0.9);
-            border: 1px solid #e2e8f0;
-            border-radius: 20px;
-            font-size: 13px;
-            color: #64748b;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        .apply-btn:hover {
-            background: white;
-            border-color: #667eea;
-            color: #667eea;
         }
         /* 选项卡 */
         .tabs {
@@ -136,52 +111,49 @@
         /* 当前状态 */
         .status-section {
             text-align: center;
-            padding: 30px;
+            padding: 40px 30px;
         }
         .status-title {
             font-size: 16px;
             color: #666;
             margin-bottom: 10px;
+            letter-spacing: 1px;
         }
         .status-value {
-            font-size: 28px;
-            font-weight: bold;
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+        .status-normal {
             color: #2563eb;
         }
         .signin-time {
-            font-size: 14px;
+            font-size: 15px;
             color: #94a3b8;
-            margin-top: 10px;
+            margin-top: 8px;
         }
         /* 位置信息 */
         .location-section {
             margin: 0 30px;
-            background: #dcfce7;
-            border-radius: 12px;
-            padding: 20px;
-            border-left: 4px solid #22c55e;
+            background: linear-gradient(135deg, #dcfce7 0%, #f8fafc 100%);
+            border-radius: 16px;
+            padding: 26px;
+            border-left: none;
+            box-shadow: 0 2px 12px rgba(34,197,94,0.12);
         }
         .location-title {
             font-weight: 600;
             color: #166534;
-            margin-bottom: 10px;
-            font-size: 14px;
+            margin-bottom: 16px;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
         .location-info {
-            font-size: 13px;
+            font-size: 15px;
             color: #15803d;
-            line-height: 1.8;
-        }
-        .location-info span {
-            color: #22c55e;
-            font-weight: 500;
-        }
-        /* 操作按钮 */
-        .action-section {
-            padding: 30px;
-            display: flex;
-            gap: 15px;
-            justify-content: center;
+            line-height: 2;
         }
         .btn {
             padding: 14px 40px;
@@ -215,6 +187,17 @@
             opacity: 0.5;
             cursor: not-allowed;
             transform: none;
+        }
+        .btn-small {
+            padding: 9px 20px;
+            font-size: 14px;
+        }
+        /* 操作按钮 */
+        .action-section {
+            padding: 30px;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
         }
         /* 签到规则 */
         .rules-section {
@@ -265,16 +248,12 @@
 <!-- 右侧主内容 -->
 <div class="main-content">
     <!-- 顶部消息提示 -->
-    <div th:if="${message != null and message != ''}" class="message-bar success">
-        <span>✓</span>
+    <div th:if="${message != null and message != ''}" th:class="${message.contains('成功') ? 'message-bar success' : 'message-bar error'}">
         <span th:text="${message}"></span>
     </div>
 
     <!-- 签到卡片 -->
     <div class="signin-card">
-        <!-- 补签申请按钮 -->
-        <button class="apply-btn">补签申请</button>
-
         <!-- 选项卡 -->
         <div class="tabs">
             <div class="tab active">签到/签退</div>
@@ -284,33 +263,37 @@
         <!-- 当前状态 -->
         <div class="status-section">
             <div class="status-title">当前状态</div>
-            <div class="status-value">
-                <span th:text="${isSignedIn ? '已签到' : '未签到'}"></span>
+            <div class="status-value" th:class="${isSignedIn ? 'status-normal' : 'status-normal'}">
+                <span th:text="${isSignedIn ? '已签到（未签退）' : '未签到'}"></span>
             </div>
             <div th:if="${todayRecord != null && todayRecord.getSignInTime() != null}" class="signin-time">
                 签到时间: <span th:text="${#dates.format(todayRecord.signInTime, 'yyyy-MM-dd HH:mm:ss')}"></span>
+            </div>
+            <div th:if="${todayRecord != null && todayRecord.getSignOutTime() != null}" class="signin-time">
+                签退时间: <span th:text="${#dates.format(todayRecord.signOutTime, 'yyyy-MM-dd HH:mm:ss')}"></span>
             </div>
         </div>
 
         <!-- 位置信息 -->
         <div class="location-section">
             <div class="location-title">📍 位置信息</div>
-            <div class="location-content">
+            <div class="location-info">
                 <div>经度: <span id="longitude">--</span></div>
                 <div>纬度: <span id="latitude">--</span></div>
                 <div>距离签到点: <span id="distance">--</span></div>
             </div>
-            <button type="button" class="btn btn-small" onclick="getLocation()" style="margin-top: 10px;">
+            <button type="button" class="btn btn-small" onclick="getLocation()" style="margin-top: 12px;">
                 🔄 重新获取位置
             </button>
         </div>
+
 
         <!-- 操作按钮 -->
         <div class="action-section">
             <form th:action="@{/user/signin}" method="post" id="signInForm" style="display: inline;">
                 <input type="hidden" name="latitude" id="signInLatitude"/>
                 <input type="hidden" name="longitude" id="signInLongitude"/>
-                <button type="submit" class="btn btn-primary" th:disabled="${isSignedIn}" onclick="setLocation()">
+                <button type="submit" class="btn btn-primary" th:disabled="${isSignedIn}" onclick="return checkBeforeSignIn()">
                     <span>✓</span> 签到
                 </button>
             </form>
@@ -335,12 +318,13 @@
         </div>
     </div>
 </div>
-
 <script>
     var currentLatitude = null;
     var currentLongitude = null;
+    const ALLOW_DISTANCE = 500;
+    const TARGET_LAT = 37.9047;   // 中北大学工程训练中心纬度
+    const TARGET_LNG = 112.5667;  // 中北大学工程训练中心经度
 
-    // 获取地理位置
     function getLocation() {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
@@ -349,50 +333,20 @@
                     currentLongitude = pos.coords.longitude;
                     document.getElementById('latitude').textContent = pos.coords.latitude.toFixed(6);
                     document.getElementById('longitude').textContent = pos.coords.longitude.toFixed(6);
-                    // 计算距离签到点的距离（模拟实验室坐标）
-                    var labLat = 38.013794;
-                    var labLng = 112.446487;
-                    var distance = calculateDistance(pos.coords.latitude, pos.coords.longitude, labLat, labLng);
+                    var distance = calculateDistance(pos.coords.latitude, pos.coords.longitude, TARGET_LAT, TARGET_LNG);
                     document.getElementById('distance').textContent = distance.toFixed(2) + '米';
                     alert('位置获取成功！');
                 },
                 function(error) {
-                    // 处理定位失败
-                    var msg = '无法获取位置';
-                    switch(error.code) {
-                        case error.PERMISSION_DENIED:
-                            msg = '用户拒绝了位置权限，请在浏览器设置中允许位置访问';
-                            break;
-                        case error.POSITION_UNAVAILABLE:
-                            msg = '位置信息不可用';
-                            break;
-                        case error.TIMEOUT:
-                            msg = '请求超时，请重试';
-                            break;
-                    }
-                    document.getElementById('longitude').textContent = msg;
-                    document.getElementById('latitude').textContent = '--';
-                    document.getElementById('distance').textContent = '--';
-                    alert(msg);
-                }
+                    alert('获取位置失败：' + error.message);
+                },
+                { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
             );
         } else {
-            document.getElementById('longitude').textContent = '浏览器不支持定位';
-            document.getElementById('latitude').textContent = '--';
-            document.getElementById('distance').textContent = '--';
-            alert('您的浏览器不支持定位功能');
+            alert('您的浏览器不支持地理定位');
         }
     }
 
-    // 设置位置到表单
-    function setLocation() {
-        if (currentLatitude != null && currentLongitude != null) {
-            document.getElementById('signInLatitude').value = currentLatitude;
-            document.getElementById('signInLongitude').value = currentLongitude;
-        }
-    }
-
-    // 计算两点间距离（米）
     function calculateDistance(lat1, lng1, lat2, lng2) {
         var R = 6371000;
         var dLat = (lat2 - lat1) * Math.PI / 180;
@@ -404,17 +358,37 @@
         return R * c;
     }
 
-    window.onload = getLocation;
-
+    function checkBeforeSignIn() {
+        if (currentLatitude == null || currentLongitude == null) {
+            alert('请先获取位置信息！');
+            getLocation();
+            return false;
+        }
+        document.getElementById('signInLatitude').value = currentLatitude;
+        document.getElementById('signInLongitude').value = currentLongitude;
+        return true;
+    }
     // 选项卡切换
-    document.querySelectorAll('.tab').forEach(function(tab) {
-        tab.addEventListener('click', function() {
-            document.querySelectorAll('.tab').forEach(function(t) {
-                t.classList.remove('active');
-            });
-            tab.classList.add('active');
+    function switchTab(tabName) {
+        // 切换选项卡样式
+        var tabs = document.querySelectorAll('.tab');
+        tabs.forEach(function(tab) {
+            tab.classList.remove('active');
         });
-    });
+
+        // 显示对应内容
+        if (tabName === 'signin') {
+            document.querySelector('.tab:nth-child(1)').classList.add('active');
+            // 显示签到内容，隐藏补签内容
+            document.getElementById('signin-content').style.display = 'block';
+            document.getElementById('apply-content').style.display = 'none';
+        } else {
+            document.querySelector('.tab:nth-child(2)').classList.add('active');
+            // 显示补签内容，隐藏签到内容
+            document.getElementById('signin-content').style.display = 'none';
+            document.getElementById('apply-content').style.display = 'block';
+        }
+    }
 </script>
 </body>
 </html>

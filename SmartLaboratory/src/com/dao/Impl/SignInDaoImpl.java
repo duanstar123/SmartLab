@@ -50,7 +50,11 @@ public class SignInDaoImpl implements SignInDao {
         try {
             conn = JDBCTools.getConnection();
             QueryRunner queryRunner = new QueryRunner();
-            String sql = "select * from signin where student_id=? order by sign_in_time desc";
+//            String sql = "select * from signin where student_id=? order by sign_in_time desc";
+// 使用别名将下划线字段映射为驼峰属性
+            String sql = "select id, student_id as studentId, name, sign_in_time as signInTime, " +
+                    "sign_out_time as signOutTime, status, latitude, longitude " +
+                    "from signin where student_id=? and DATE(sign_in_time)=? order by sign_in_time desc limit 1";
             list = queryRunner.query(conn, sql, new BeanListHandler<SignIn>(SignIn.class), studentId);
         } catch (Exception e) {
             e.printStackTrace();
@@ -75,7 +79,10 @@ public class SignInDaoImpl implements SignInDao {
             QueryRunner queryRunner = new QueryRunner();
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             String dateStr = sdf.format(date);
-            String sql = "select * from signin where student_id=? and DATE(sign_in_time)=?";
+            // 使用别名将下划线字段映射为驼峰属性
+            String sql = "select id, student_id as studentId, name, sign_in_time as signInTime, " +
+                    "sign_out_time as signOutTime, status, latitude, longitude " +
+                    "from signin where student_id=? and DATE(sign_in_time)=? order by sign_in_time desc limit 1";
             signIn = queryRunner.query(conn, sql, new BeanHandler<SignIn>(SignIn.class), studentId, dateStr);
         } catch (Exception e) {
             e.printStackTrace();

@@ -2,6 +2,7 @@ package com.service;
 
 import com.entity.SignIn;
 
+import java.util.Date;
 import java.util.List;
 
 public interface SignInService {
@@ -34,4 +35,6 @@ public interface SignInService {
      * @return 是否签退成功
      */
     public boolean signOut(String studentId);
+
+    SignIn findByDate(String studentId, Date date);
 }

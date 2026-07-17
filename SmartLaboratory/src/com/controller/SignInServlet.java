@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
+import java.util.Date;
 
 public class SignInServlet extends ViewBaseServlet {
     @Override
@@ -23,19 +24,35 @@ public class SignInServlet extends ViewBaseServlet {
 
         // 获取用户签到记录
         SignInService signInService = new SignInServiceImpl();
-        List<SignIn> records = signInService.getSignInRecords(user.getStudentId());
+        SignIn todayRecord= signInService.findByDate(user.getStudentId(), new Date());
+        // 添加调试日志
+        System.out.println("===== 签到调试 ======");
+        System.out.println("studentId: " + user.getStudentId());
+        System.out.println("todayRecord: " + todayRecord);
+        if (todayRecord != null) {
+            System.out.println("signInTime: " + todayRecord.getSignInTime());
+            System.out.println("signOutTime: " + todayRecord.getSignOutTime());
+            System.out.println("status: " + todayRecord.getStatus());
+        }
 
         WebContext ctx = new WebContext(request, response, getServletContext());
-        ctx.setVariable("signInRecords", records);
-        ctx.setVariable("user", user);
+
 
         // 判断当前是否已签到
-        SignIn todayRecord = records != null && !records.isEmpty() ? records.get(0) : null;
         boolean isSignedIn = todayRecord != null && todayRecord.getSignOutTime() == null;
+        System.out.println("isSignedIn: " + isSignedIn); // 新增调试日志
         ctx.setVariable("isSignedIn", isSignedIn);
         ctx.setVariable("todayRecord", todayRecord);
+        ctx.setVariable("studentId", user.getStudentId());
 
-        processTemplate("User/signin", request, response);
+        // 读取重定向携带的提示消息
+        String message = (String) request.getSession().getAttribute("msg");
+        if (message != null) {
+            ctx.setVariable("message", message);
+            request.getSession().removeAttribute("msg");
+        }
+
+        processTemplate("User/signin", ctx, response);
     }
 
     @Override
@@ -106,25 +123,12 @@ public class SignInServlet extends ViewBaseServlet {
                         message = "今日已签到，请勿重复签到！";
                     }
                 } else {
-                    message = "签到失败，请重试！";
+                    message = "不在签到范围内，请前往指定地点签到！";
                 }
             }
         }
-
-        ctx.setVariable("message", message);
-
-        // 获取更新后的签到记录
-        List<SignIn> records = signInService.getSignInRecords(user.getStudentId());
-        ctx.setVariable("signInRecords", records);
-
-        // 判断当前是否已签到
-        SignIn todayRecord = records != null && !records.isEmpty() ? records.get(0) : null;
-        boolean isSignedIn = todayRecord != null && todayRecord.getSignOutTime() == null;
-        ctx.setVariable("isSignedIn", isSignedIn);
-
-        // 传递今日签到记录（用于显示签到时间）
-        ctx.setVariable("todayRecord", todayRecord);
-
-        processTemplate("User/signin", request, response);
+        request.getSession().setAttribute("msg", message);
+        response.sendRedirect(request.getContextPath() + "/user/signin");
+        return;
     }
 }
