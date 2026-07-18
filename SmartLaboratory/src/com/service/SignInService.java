@@ -37,4 +37,23 @@ public interface SignInService {
     public boolean signOut(String studentId);
 
     SignIn findByDate(String studentId, Date date);
+    /**
+     * 获取所有签到记录
+     * @return 签到记录列表
+     */
+    public List<SignIn> getAllSignInRecords();
+
+    /**
+     * 获取指定日期的签到记录
+     * @param date 日期
+     * @return 签到记录列表
+     */
+    public List<SignIn> getSignInRecordsByDate(Date date);
+
+    /**
+     * 统计某日签到人数
+     * @param date 日期
+     * @return 签到人数
+     */
+    public int countSignInByDate(Date date);
 }

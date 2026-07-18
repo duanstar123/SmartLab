@@ -3,7 +3,9 @@ package com.controller;
 
 import com.entity.Admin;
 import com.entity.User;
+import com.service.Impl.SignInServiceImpl;
 import com.service.Impl.UserServiceImpl;
+import com.service.SignInService;
 import com.service.UserService;
 import org.thymeleaf.context.WebContext;
 
@@ -11,12 +13,12 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 public class AdminIndexServlet extends ViewBaseServlet {
 
     private UserService userService = new UserServiceImpl();
-
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Admin admin = (Admin) request.getSession().getAttribute("admin");
@@ -36,11 +38,16 @@ public class AdminIndexServlet extends ViewBaseServlet {
         int totalUsers = users != null ? users.size() : 0;
         ctx.setVariable("totalUsers", totalUsers);
 
-        // 其他统计数据暂时设为0（需要对应服务支持）
-        ctx.setVariable("todaySignIn", 0);
+        // 查询今日签到人数
+        SignInService signInService = new SignInServiceImpl();
+        int todaySignIn = signInService.countSignInByDate(new Date());
+        ctx.setVariable("todaySignIn", todaySignIn);
+
         ctx.setVariable("reservedSeats", 0);
         ctx.setVariable("pendingTasks", 0);
 
         getTemplateEngine().process("Admin/index", ctx, response.getWriter());
     }
+
+
 }

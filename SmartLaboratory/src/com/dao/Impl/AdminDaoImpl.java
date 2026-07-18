@@ -88,9 +88,9 @@ public class AdminDaoImpl implements AdminDao {
                     System.out.println("查询失败，未找到匹配的管理员");
                 }
             } finally {
-                if (rs != null) rs.close();
-                if (ps != null) ps.close();
-                if (conn != null) conn.close();
+                try { if (rs != null) rs.close(); } catch (Exception e) {}
+                try { if (ps != null) ps.close(); } catch (Exception e) {}
+                // 连接由 ThreadLocal 统一管理，这里不关闭 conn
             }
 
         } catch (Exception e) {

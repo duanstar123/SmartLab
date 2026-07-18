@@ -221,4 +221,36 @@ public class SignInServiceImpl implements SignInService {
             return null;
         }
     }
+    @Override
+    public List<SignIn> getAllSignInRecords() {
+        try {
+            SignInDao signInDao = new SignInDaoImpl();
+            return signInDao.findAll();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
+    public List<SignIn> getSignInRecordsByDate(Date date) {
+        try {
+            SignInDao signInDao = new SignInDaoImpl();
+            return signInDao.findAllByDate(date);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
+    public int countSignInByDate(Date date) {
+        try {
+            SignInDao signInDao = new SignInDaoImpl();
+            return signInDao.countByDate(date);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
 }

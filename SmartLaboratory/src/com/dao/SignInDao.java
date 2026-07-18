@@ -35,4 +35,23 @@ public interface SignInDao {
      * @return 影响的行数
      */
     public int signOut(String studentId, Date signOutTime);
+    /**
+     * 查询所有签到记录
+     * @return 签到记录列表
+     */
+    public List<SignIn> findAll();
+
+    /**
+     * 查询指定日期的所有签到记录
+     * @param date 日期
+     * @return 签到记录列表
+     */
+    public List<SignIn> findAllByDate(Date date);
+
+    /**
+     * 统计某日签到人数
+     * @param date 日期
+     * @return 签到人数
+     */
+    public int countByDate(Date date);
 }

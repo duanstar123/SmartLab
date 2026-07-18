@@ -41,6 +41,9 @@ public class ViewBaseServlet extends HttpServlet {
         // 5.给模板引擎对象设置模板解析器
         templateEngine.setTemplateResolver(templateResolver);
     }
+    protected TemplateEngine getTemplateEngine() {
+        return templateEngine;
+    }
 
     //页面跳转方法
     protected void processTemplate(String templateName, HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -57,9 +60,5 @@ public class ViewBaseServlet extends HttpServlet {
         resp.setContentType("text/html;charset=UTF-8");
         // 2.直接使用传入的WebContext处理模板
         templateEngine.process(templateName, webContext, resp.getWriter());
-    }
-    // 获取TemplateEngine实例（供子类使用）
-    protected TemplateEngine getTemplateEngine() {
-        return templateEngine;
     }
 }

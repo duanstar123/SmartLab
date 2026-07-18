@@ -1,25 +1,20 @@
 package com.dao.Impl;
 
+import com.dao.JDBCTools;
 import com.dao.UserDao;
 import com.entity.User;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.DriverManager;
 import java.util.ArrayList;
 import java.util.List;
 
 public class UserDaoImpl implements UserDao {
 
-    // 直接使用 JDBC 连接，避免 ThreadLocal 问题
+    // 使用统一的 JDBCTools 获取连接
     private Connection getConnection() throws Exception {
-        Class.forName("com.mysql.cj.jdbc.Driver");
-        return DriverManager.getConnection(
-                "jdbc:mysql://localhost:3306/SmartLab?useSSL=false&serverTimezone=Asia/Shanghai&characterEncoding=utf8",
-                "root",
-                "123456"
-        );
+        return JDBCTools.getConnection();
     }
 
     @Override
@@ -50,7 +45,7 @@ public class UserDaoImpl implements UserDao {
         } finally {
             try { if (rs != null) rs.close(); } catch (Exception e) {}
             try { if (ps != null) ps.close(); } catch (Exception e) {}
-            try { if (conn != null) conn.close(); } catch (Exception e) {}
+            // 连接由 ThreadLocal 统一管理，这里不关闭 conn
         }
         return user;
     }
@@ -79,7 +74,7 @@ public class UserDaoImpl implements UserDao {
             e.printStackTrace();
         } finally {
             try { if (ps != null) ps.close(); } catch (Exception e) {}
-            try { if (conn != null) conn.close(); } catch (Exception e) {}
+            // 连接由 ThreadLocal 统一管理，这里不关闭 conn
         }
         return result;
     }
@@ -99,7 +94,7 @@ public class UserDaoImpl implements UserDao {
             e.printStackTrace();
         } finally {
             try { if (ps != null) ps.close(); } catch (Exception e) {}
-            try { if (conn != null) conn.close(); } catch (Exception e) {}
+            // 连接由 ThreadLocal 统一管理，这里不关闭 conn
         }
         return result;
     }
@@ -133,7 +128,7 @@ public class UserDaoImpl implements UserDao {
         } finally {
             try { if (rs != null) rs.close(); } catch (Exception e) {}
             try { if (ps != null) ps.close(); } catch (Exception e) {}
-            try { if (conn != null) conn.close(); } catch (Exception e) {}
+            // 连接由 ThreadLocal 统一管理，这里不关闭 conn
         }
         return users;
     }

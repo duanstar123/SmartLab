@@ -6,7 +6,7 @@ import com.entity.SignIn;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.BeanHandler;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
-
+import org.apache.commons.dbutils.handlers.ScalarHandler;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
@@ -32,13 +32,7 @@ public class SignInDaoImpl implements SignInDao {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            if (conn != null) {
-                try {
-                    JDBCTools.freeConnection(conn);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
+            // 连接由 ThreadLocal 统一管理，这里不关闭
         }
         return rs;
     }
@@ -50,8 +44,6 @@ public class SignInDaoImpl implements SignInDao {
         try {
             conn = JDBCTools.getConnection();
             QueryRunner queryRunner = new QueryRunner();
-//            String sql = "select * from signin where student_id=? order by sign_in_time desc";
-// 使用别名将下划线字段映射为驼峰属性
             String sql = "select id, student_id as studentId, name, sign_in_time as signInTime, " +
                     "sign_out_time as signOutTime, status, latitude, longitude " +
                     "from signin where student_id=? and DATE(sign_in_time)=? order by sign_in_time desc limit 1";
@@ -59,13 +51,7 @@ public class SignInDaoImpl implements SignInDao {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            if (conn != null) {
-                try {
-                    JDBCTools.freeConnection(conn);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
+            // 连接由 ThreadLocal 统一管理，这里不关闭
         }
         return list;
     }
@@ -79,7 +65,6 @@ public class SignInDaoImpl implements SignInDao {
             QueryRunner queryRunner = new QueryRunner();
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             String dateStr = sdf.format(date);
-            // 使用别名将下划线字段映射为驼峰属性
             String sql = "select id, student_id as studentId, name, sign_in_time as signInTime, " +
                     "sign_out_time as signOutTime, status, latitude, longitude " +
                     "from signin where student_id=? and DATE(sign_in_time)=? order by sign_in_time desc limit 1";
@@ -87,13 +72,7 @@ public class SignInDaoImpl implements SignInDao {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            if (conn != null) {
-                try {
-                    JDBCTools.freeConnection(conn);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
+            // 连接由 ThreadLocal 统一管理，这里不关闭
         }
         return signIn;
     }
@@ -113,14 +92,67 @@ public class SignInDaoImpl implements SignInDao {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            if (conn != null) {
-                try {
-                    JDBCTools.freeConnection(conn);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
+            // 连接由 ThreadLocal 统一管理，这里不关闭
         }
         return rs;
+    }
+
+    @Override
+    public List<SignIn> findAll() {
+        List<SignIn> list = null;
+        Connection conn = null;
+        try {
+            conn = JDBCTools.getConnection();
+            QueryRunner queryRunner = new QueryRunner();
+            String sql = "select id, student_id as studentId, name, sign_in_time as signInTime, " +
+                    "sign_out_time as signOutTime, status, latitude, longitude " +
+                    "from signin order by sign_in_time desc";
+            list = queryRunner.query(conn, sql, new BeanListHandler<SignIn>(SignIn.class));
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            // 连接由 ThreadLocal 统一管理，这里不关闭
+        }
+        return list;
+    }
+
+    @Override
+    public List<SignIn> findAllByDate(Date date) {
+        List<SignIn> list = null;
+        Connection conn = null;
+        try {
+            conn = JDBCTools.getConnection();
+            QueryRunner queryRunner = new QueryRunner();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            String dateStr = sdf.format(date);
+            String sql = "select id, student_id as studentId, name, sign_in_time as signInTime, " +
+                    "sign_out_time as signOutTime, status, latitude, longitude " +
+                    "from signin where DATE(sign_in_time)=? order by sign_in_time desc";
+            list = queryRunner.query(conn, sql, new BeanListHandler<SignIn>(SignIn.class), dateStr);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            // 连接由 ThreadLocal 统一管理，这里不关闭
+        }
+        return list;
+    }
+
+    @Override
+    public int countByDate(Date date) {
+        Connection conn = null;
+        try {
+            conn = JDBCTools.getConnection();
+            QueryRunner queryRunner = new QueryRunner();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            String dateStr = sdf.format(date);
+            String sql = "select count(*) from signin where DATE(sign_in_time)=?";
+            Long count = (Long) queryRunner.query(conn, sql, new ScalarHandler(), dateStr);
+            return count != null ? count.intValue() : 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        } finally {
+            // 连接由 ThreadLocal 统一管理，这里不关闭
+        }
     }
 }

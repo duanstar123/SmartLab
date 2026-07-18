@@ -130,4 +130,12 @@
         <servlet-name>AdminUserServlet</servlet-name>
         <url-pattern>/admin/users</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>AdminSignInServlet</servlet-name>
+        <servlet-class>com.controller.AdminSignInServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AdminSignInServlet</servlet-name>
+        <url-pattern>/admin/signin</url-pattern>
+    </servlet-mapping>
 </web-app>
