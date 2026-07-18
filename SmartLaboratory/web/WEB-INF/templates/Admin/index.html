@@ -186,26 +186,26 @@
             </a>
         </div>
 
-        <!-- 统计信息 -->
+        <!-- 将硬编码的数字改为动态变量 -->
         <div class="stats-section">
-            <div class="stats-cards">
-                <div class="stat-card">
-                    <div class="number">0</div>
-                    <div class="label">总用户数</div>
-                </div>
-                <div class="stat-card">
-                    <div class="number">0</div>
-                    <div class="label">今日签到</div>
-                </div>
-                <div class="stat-card">
-                    <div class="number">0</div>
-                    <div class="label">已预约座位</div>
-                </div>
-                <div class="stat-card">
-                    <div class="number">0</div>
-                    <div class="label">待处理任务</div>
-                </div>
-            </div>
+        <div class="stats-cards">
+            <div class="stat-card">
+            <div class="number" th:text="${totalUsers}">0</div>
+            <div class="label">总用户数</div>
+        </div>
+        <div class="stat-card">
+            <div class="number" th:text="${todaySignIn}">0</div>
+            <div class="label">今日签到</div>
+        </div>
+        <div class="stat-card">
+            <div class="number" th:text="${reservedSeats}">0</div>
+            <div class="label">已预约座位</div>
+        </div>
+        <div class="stat-card">
+            <div class="number" th:text="${pendingTasks}">0</div>
+            <div class="label">待处理任务</div>
+        </div>
+        </div>
         </div>
     </div>
 </div>

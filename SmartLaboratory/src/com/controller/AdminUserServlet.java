@@ -77,8 +77,7 @@ public class AdminUserServlet extends ViewBaseServlet {
             ctx.setVariable("message", "添加学生失败，学号已存在！");
             ctx.setVariable("messageType", "error");
         }
-
-        getTemplateEngine().process("Admin/users", ctx, response.getWriter());
+        processTemplate("Admin/users", ctx, response);
     }
 
     private void showAddForm(HttpServletRequest request, HttpServletResponse response, Admin admin) throws IOException {
@@ -87,7 +86,7 @@ public class AdminUserServlet extends ViewBaseServlet {
         ctx.setVariable("users", userService.getAllUsers());
         ctx.setVariable("searchKeyword", "");
         ctx.setVariable("showAddModal", true);
-        getTemplateEngine().process("Admin/users", ctx, response.getWriter());
+        processTemplate("Admin/users", ctx, response);
     }
 
     private void addUser(HttpServletRequest request, HttpServletResponse response, Admin admin) throws IOException {
@@ -136,6 +135,6 @@ public class AdminUserServlet extends ViewBaseServlet {
         ctx.setVariable("admin", admin);
         ctx.setVariable("users", filteredUsers);
         ctx.setVariable("searchKeyword", keyword);
-        getTemplateEngine().process("Admin/users", ctx, response.getWriter());
+        processTemplate("Admin/users", ctx, response);
     }
 }

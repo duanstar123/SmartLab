@@ -16,9 +16,9 @@ public class UserDaoImpl implements UserDao {
     private Connection getConnection() throws Exception {
         Class.forName("com.mysql.cj.jdbc.Driver");
         return DriverManager.getConnection(
-                "jdbc:mysql://localhost:3306/lab?useSSL=false&serverTimezone=Asia/Shanghai&characterEncoding=utf8",
+                "jdbc:mysql://localhost:3306/SmartLab?useSSL=false&serverTimezone=Asia/Shanghai&characterEncoding=utf8",
                 "root",
-                "root"
+                "123456"
         );
     }
 

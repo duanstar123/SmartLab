@@ -58,4 +58,8 @@ public class ViewBaseServlet extends HttpServlet {
         // 2.直接使用传入的WebContext处理模板
         templateEngine.process(templateName, webContext, resp.getWriter());
     }
+    // 获取TemplateEngine实例（供子类使用）
+    protected TemplateEngine getTemplateEngine() {
+        return templateEngine;
+    }
 }

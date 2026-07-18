@@ -19,7 +19,7 @@ public class UserLoginServlet extends ViewBaseServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("text/html;charset=UTF-8");
         WebContext ctx = new WebContext(request, response, getServletContext());
-        getTemplateEngine().process("User/login", ctx, response.getWriter());
+        getTemplateEngine().process("login", ctx, response.getWriter());
     }
 
     @Override
@@ -38,7 +38,7 @@ public class UserLoginServlet extends ViewBaseServlet {
         } else {
             WebContext ctx = new WebContext(request, response, getServletContext());
             ctx.setVariable("error", "学号或密码错误！");
-            getTemplateEngine().process("User/login", ctx, response.getWriter());
+            getTemplateEngine().process("login", ctx, response.getWriter());
         }
     }
 
